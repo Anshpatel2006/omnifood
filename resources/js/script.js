@@ -331,6 +331,51 @@ $(document).ready(function() {
     });
   });
 
+  // ===== SCROLL-TRIGGERED IMAGE ANIMATIONS =====
+  function checkScrollAnimations() {
+    var scrollTop = $(window).scrollTop();
+    var windowHeight = $(window).height();
+    var triggerOffset = 100; // Distance from bottom of viewport to trigger animation
+    
+    $('.scroll-animate').each(function(index) {
+      var element = $(this);
+      var elementTop = element.offset().top;
+      var elementHeight = element.outerHeight();
+      
+      // Check if element is in viewport
+      if (scrollTop + windowHeight > elementTop + triggerOffset && 
+          scrollTop < elementTop + elementHeight - triggerOffset) {
+        
+        // Add delay based on element index for staggered effect
+        var delay = (index % 6) * 0.1; // 0.1s delay between each element, cycles every 6 elements
+        
+        setTimeout(function() {
+          element.addClass('animate-in');
+        }, delay * 1000);
+      }
+    });
+  }
+  
+  // Run on page load and scroll
+  $(document).ready(function() {
+    checkScrollAnimations();
+  });
+  
+  $(window).scroll(function() {
+    checkScrollAnimations();
+  });
+  
+  // Throttle scroll events for better performance
+  var scrollTimeout;
+  $(window).scroll(function() {
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
+    scrollTimeout = setTimeout(function() {
+      checkScrollAnimations();
+    }, 10);
+  });
+
   /* ===== STICKY NAVIGATION ===== */
   $('#features').waypoint(function(direction) {
     if (direction == "down") {
